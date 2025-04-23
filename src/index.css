@@ -1,13 +1,140 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+@import '@fortawesome/fontawesome-free/css/all.css';
+
+:root {
+  --cyber-green: #00ff88;
+  --cyber-blue: #00b4d8;
+  --cyber-dark: #0a192f;
+  --cyber-light: #172a45;
+  --cyber-text: #ccd6f6;
+  --cyber-pink: #ff2d75;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  font-family: 'Fira Code', monospace;
+  background-color: var(--cyber-dark);
+  color: var(--cyber-text);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  color: var(--cyber-text);
+}
+
+/* Cyber border */
+.cyber-border {
+  position: relative;
+  border: 2px solid var(--cyber-green);
+}
+
+.cyber-border::before, 
+.cyber-border::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--cyber-green);
+}
+
+.cyber-border::before {
+  top: -10px;
+  left: -10px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.cyber-border::after {
+  bottom: -10px;
+  right: -10px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Navbar link effect */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: var(--cyber-green);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Card hover effect */
+.cyber-card {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 180, 216, 0.2);
+}
+
+.cyber-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--cyber-green);
+  box-shadow: 0 10px 20px rgba(0, 255, 136, 0.1);
+}
+
+/* Glowing button */
+.btn-glow {
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.btn-glow:hover {
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+  transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: var(--cyber-green) }
+}
+
+@keyframes hacker {
+  0% { width: 0; opacity: 0 }
+  1% { opacity: 1 }
+  50% { opacity: 1 }
+  100% { width: 100%; opacity: 1 }
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px var(--cyber-green), 0 0 10px var(--cyber-green) }
+  to { text-shadow: 0 0 10px var(--cyber-green), 0 0 20px var(--cyber-green), 0 0 30px var(--cyber-green) }
+}
+
+@keyframes matrix {
+  0% { background-position: 0 0 }
+  100% { background-position: 0 100% }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%) }
+  100% { transform: translateY(100%) }
+}
+
+.terminal-cursor {
+  border-right: 2px solid var(--cyber-green);
+  animation: blink-caret .75s step-end infinite;
+}
+
+.hacker-text {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: hacker-text 4s steps(30) 1 forwards;
 }
