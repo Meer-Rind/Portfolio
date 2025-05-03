@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -52,15 +53,28 @@ const ContactForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <motion.form 
+      onSubmit={handleSubmit} 
+      className="space-y-6"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       {submitStatus && (
-        <div className={`p-4 rounded-md ${submitStatus.success ? 'bg-green-900 text-green-100' : 'bg-red-900 text-red-100'}`}>
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`p-4 rounded-md ${submitStatus.success ? 'bg-green-900 text-green-100' : 'bg-red-900 text-red-100'} shadow-lg`}
+        >
           {submitStatus.message}
-        </div>
+        </motion.div>
       )}
       
-      <div>
-        <label htmlFor="name" className="block text-sm font-medium mb-1 font-rajdhani">Name</label>
+      <motion.div
+        whileHover={{ scale: 1.01 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+      >
+        <label htmlFor="name" className="block text-sm font-medium mb-1 font-rajdhani text-electric-blue">Name</label>
         <input
           type="text"
           id="name"
@@ -68,12 +82,15 @@ const ContactForm = () => {
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full px-4 py-2 bg-navy-dark border border-navy-light rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-green font-fira"
+          className="w-full px-4 py-3 bg-navy-dark border border-navy-light rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-green font-fira text-white transition-all duration-300 hover:border-electric-blue"
         />
-      </div>
+      </motion.div>
       
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium mb-1 font-rajdhani">Email</label>
+      <motion.div
+        whileHover={{ scale: 1.01 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+      >
+        <label htmlFor="email" className="block text-sm font-medium mb-1 font-rajdhani text-electric-blue">Email</label>
         <input
           type="email"
           id="email"
@@ -81,12 +98,15 @@ const ContactForm = () => {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full px-4 py-2 bg-navy-dark border border-navy-light rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-green font-fira"
+          className="w-full px-4 py-3 bg-navy-dark border border-navy-light rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-green font-fira text-white transition-all duration-300 hover:border-electric-blue"
         />
-      </div>
+      </motion.div>
       
-      <div>
-        <label htmlFor="subject" className="block text-sm font-medium mb-1 font-rajdhani">Subject</label>
+      <motion.div
+        whileHover={{ scale: 1.01 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+      >
+        <label htmlFor="subject" className="block text-sm font-medium mb-1 font-rajdhani text-electric-blue">Subject</label>
         <input
           type="text"
           id="subject"
@@ -94,12 +114,15 @@ const ContactForm = () => {
           value={formData.subject}
           onChange={handleChange}
           required
-          className="w-full px-4 py-2 bg-navy-dark border border-navy-light rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-green font-fira"
+          className="w-full px-4 py-3 bg-navy-dark border border-navy-light rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-green font-fira text-white transition-all duration-300 hover:border-electric-blue"
         />
-      </div>
+      </motion.div>
       
-      <div>
-        <label htmlFor="message" className="block text-sm font-medium mb-1 font-rajdhani">Message</label>
+      <motion.div
+        whileHover={{ scale: 1.01 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+      >
+        <label htmlFor="message" className="block text-sm font-medium mb-1 font-rajdhani text-electric-blue">Message</label>
         <textarea
           id="message"
           name="message"
@@ -107,24 +130,50 @@ const ContactForm = () => {
           value={formData.message}
           onChange={handleChange}
           required
-          className="w-full px-4 py-2 bg-navy-dark border border-navy-light rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-green font-fira"
+          className="w-full px-4 py-3 bg-navy-dark border border-navy-light rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-green font-fira text-white transition-all duration-300 hover:border-electric-blue"
         ></textarea>
-      </div>
+      </motion.div>
       
-      <div>
+      <motion.div
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`px-6 py-3 rounded-md font-bold font-rajdhani transition-colors duration-300 ${
+          className={`w-full px-6 py-3 rounded-md font-bold font-rajdhani transition-all duration-300 flex items-center justify-center gap-2 ${
             isSubmitting 
-              ? 'bg-gray-500 cursor-not-allowed' 
-              : 'bg-cyber-green text-navy-dark hover:bg-electric-blue'
+              ? 'bg-gray-600 cursor-not-allowed' 
+              : 'bg-cyber-green text-navy-dark hover:bg-electric-blue shadow-lg hover:shadow-electric-blue/30'
           }`}
         >
-          {isSubmitting ? 'Sending...' : 'Send Message'}
+          {isSubmitting ? (
+            <>
+              <motion.span
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="inline-block"
+              >
+                ↻
+              </motion.span>
+              Sending...
+            </>
+          ) : (
+            <>
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="h-5 w-5" 
+                viewBox="0 0 20 20" 
+                fill="currentColor"
+              >
+                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+              </svg>
+              Send Message
+            </>
+          )}
         </button>
-      </div>
-    </form>
+      </motion.div>
+    </motion.form>
   );
 };
 
