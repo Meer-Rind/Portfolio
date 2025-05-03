@@ -373,24 +373,9 @@ const Contact = () => {
                 <FiMail className="w-6 h-6" />
               </motion.div>
               <div>
-                <h3 className="text-xl font-bold mb-2 font-rajdhani">Email</h3>
-                <a 
-                  href="mailto:contact@meer-rind.com" 
-                  className="text-electric-blue hover:text-cyber-green transition-colors duration-300 font-fira flex items-center group"
-                >
-                  contact@meer-rind.com
-                  <motion.span 
-                    className="ml-2 opacity-0 group-hover:opacity-100"
-                    animate={{
-                      x: [0, 5, 0],
-                    }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Infinity
-                    }}
-                  >
-                    <FiSend className="w-4 h-4" />
-                  </motion.span>
+                <h3 className="text-lg font-bold mb-1 font-rajdhani">Email</h3>
+                <a href="mailto:shahmeer@example.com" className="text-electric-blue hover:text-cyber-green transition-colors duration-300 font-fira">
+                  shahmeer@example.com
                 </a>
               </div>
             </motion.div>
@@ -429,24 +414,9 @@ const Contact = () => {
                 <FiPhone className="w-6 h-6" />
               </motion.div>
               <div>
-                <h3 className="text-xl font-bold mb-2 font-rajdhani">Phone</h3>
-                <a 
-                  href="tel:+1234567890" 
-                  className="text-electric-blue hover:text-cyber-green transition-colors duration-300 font-fira flex items-center group"
-                >
+                <h3 className="text-lg font-bold mb-1 font-rajdhani">Phone</h3>
+                <a href="tel:+1234567890" className="text-electric-blue hover:text-cyber-green transition-colors duration-300 font-fira">
                   +1 (234) 567-890
-                  <motion.span 
-                    className="ml-2 opacity-0 group-hover:opacity-100"
-                    animate={{
-                      x: [0, 5, 0],
-                    }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Infinity
-                    }}
-                  >
-                    <FiSend className="w-4 h-4" />
-                  </motion.span>
                 </a>
               </div>
             </motion.div>
@@ -485,25 +455,8 @@ const Contact = () => {
                 <FiMapPin className="w-6 h-6" />
               </motion.div>
               <div>
-                <h3 className="text-xl font-bold mb-2 font-rajdhani">Location</h3>
-                <p className="text-electric-blue font-fira flex items-center">
-                  Karachi, Pakistan
-                  <motion.span 
-                    className="ml-2 text-cyber-green"
-                    animate={{
-                      scale: [1, 1.2, 1],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      repeatType: "reverse"
-                    }}
-                  >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                    </svg>
-                  </motion.span>
-                </p>
+                <h3 className="text-lg font-bold mb-1 font-rajdhani">Location</h3>
+                <p className="text-electric-blue font-fira">Karachi, Pakistan</p>
               </div>
             </motion.div>
           </motion.div>
