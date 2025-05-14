@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiGithub, FiExternalLink, FiArrowLeft, FiCheck } from 'react-icons/fi';
+import SecurityComponent from '../components/SecurityComponent';
 
 const ProjectDetails = () => {
   const { id } = useParams();

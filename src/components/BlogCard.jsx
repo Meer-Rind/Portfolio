@@ -1,16 +1,30 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { useEffect } from 'react';
 
 const BlogCard = ({ id, title, excerpt, date, readTime, tags, image }) => {
-  // Animation variants
+  const controls = useAnimation();
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    triggerOnce: true
+  });
+
+  useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+    }
+  }, [controls, inView]);
+
+  // Enhanced animations
   const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
-        ease: "easeOut"
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1]
       }
     }
   };
@@ -18,13 +32,16 @@ const BlogCard = ({ id, title, excerpt, date, readTime, tags, image }) => {
   const hoverVariants = {
     hover: {
       y: -10,
-      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 0 15px -3px rgba(59, 130, 246, 0.3)"
+      transition: {
+        duration: 0.4,
+        ease: [0.16, 1, 0.3, 1]
+      }
     }
   };
 
   const imageHoverVariants = {
     hover: {
-      scale: 1.1,
+      scale: 1.05,
       transition: {
         duration: 0.8,
         ease: [0.16, 1, 0.3, 1]
@@ -38,34 +55,58 @@ const BlogCard = ({ id, title, excerpt, date, readTime, tags, image }) => {
       scale: 1.05,
       backgroundColor: "#3b82f6",
       color: "#0f172a",
-      boxShadow: "0 4px 6px -1px rgba(59, 130, 246, 0.3)"
+      transition: {
+        duration: 0.2,
+        ease: "easeOut"
+      }
     }
+  };
+
+  // Ripple effect
+  const createRipple = (event) => {
+    const button = event.currentTarget;
+    const circle = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+    circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+    circle.classList.add("ripple");
+
+    const ripple = button.getElementsByClassName("ripple")[0];
+    if (ripple) ripple.remove();
+
+    button.appendChild(circle);
   };
 
   return (
     <motion.div 
-      className="bg-navy-light rounded-lg overflow-hidden shadow-lg relative"
+      ref={ref}
+      className="bg-navy-light/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl relative border border-navy-dark/20 hover:border-electric-blue/30 transition-all duration-300"
       initial="hidden"
-      whileInView="visible"
+      animate={controls}
       whileHover="hover"
       variants={cardVariants}
-      viewport={{ once: true, margin: "-50px" }}
     >
+      {/* Glass morphism overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-navy-dark/20 to-cyber-green/5 backdrop-blur-sm pointer-events-none" />
+      
       {/* Glow effect on hover */}
       <motion.div 
         className="absolute inset-0 bg-gradient-to-br from-electric-blue/10 to-cyber-green/5 opacity-0 pointer-events-none"
         variants={{
           hover: {
-            opacity: 1,
-            transition: { duration: 0.3 }
+            opacity: 0.8,
+            transition: { duration: 0.4 }
           }
         }}
       />
       
       {/* Image with parallax effect */}
       <motion.div 
-        className="h-48 overflow-hidden relative"
-        whileHover={imageHoverVariants}
+        className="h-52 overflow-hidden relative"
+        variants={imageHoverVariants}
       >
         <motion.img 
           src={image} 
@@ -73,10 +114,11 @@ const BlogCard = ({ id, title, excerpt, date, readTime, tags, image }) => {
           className="w-full h-full object-cover"
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          loading="lazy"
         />
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/70 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/80 via-transparent to-transparent" />
       </motion.div>
       
       <div className="p-6 relative z-10">
@@ -131,7 +173,7 @@ const BlogCard = ({ id, title, excerpt, date, readTime, tags, image }) => {
         
         {/* Excerpt */}
         <motion.p 
-          className="text-sm mb-4 font-fira text-gray-300 hover:text-white"
+          className="text-sm mb-4 font-fira text-gray-300 hover:text-white line-clamp-3"
           whileHover={{
             color: "#ffffff",
             transition: { duration: 0.3 }
@@ -145,7 +187,7 @@ const BlogCard = ({ id, title, excerpt, date, readTime, tags, image }) => {
           {tags.map((tag, index) => (
             <motion.span 
               key={index}
-              className="px-2 py-1 bg-navy-dark text-cyber-green text-xs rounded-full font-fira cursor-default"
+              className="px-2 py-1 bg-navy-dark/50 text-cyber-green text-xs rounded-full font-fira cursor-default backdrop-blur-sm"
               variants={tagHoverVariants}
               whileHover="hover"
               transition={{ duration: 0.2 }}
@@ -158,10 +200,11 @@ const BlogCard = ({ id, title, excerpt, date, readTime, tags, image }) => {
         {/* Read More link with animated arrow */}
         <Link 
           to={`/blog/${id}`} 
-          className="inline-flex items-center text-cyber-green hover:text-electric-blue font-rajdhani font-semibold group"
+          className="inline-flex items-center text-cyber-green hover:text-electric-blue font-rajdhani font-semibold group relative overflow-hidden"
+          onClick={createRipple}
         >
           <motion.span 
-            className="mr-2"
+            className="mr-2 relative z-10"
             whileHover={{ 
               x: 2,
               transition: { duration: 0.2 }
@@ -170,7 +213,7 @@ const BlogCard = ({ id, title, excerpt, date, readTime, tags, image }) => {
             Read More
           </motion.span>
           <motion.svg 
-            className="w-4 h-4" 
+            className="w-4 h-4 relative z-10" 
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
@@ -180,13 +223,15 @@ const BlogCard = ({ id, title, excerpt, date, readTime, tags, image }) => {
             transition={{
               duration: 1.5,
               repeat: Infinity,
-              repeatType: "loop"
+              repeatType: "loop",
+              ease: "easeInOut"
             }}
             whileHover={{
               x: [0, 8, 0],
               transition: { 
                 duration: 1,
-                repeat: Infinity 
+                repeat: Infinity,
+                ease: "easeInOut"
               }
             }}
           >

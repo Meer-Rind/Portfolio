@@ -108,3 +108,31 @@ body {
   .animate-pulse-slow {
     animation: pulse-slow 3s ease-in-out infinite;
   }
+  /* Add to your global styles */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(59, 130, 246, 0.3);
+  transform: scale(0);
+  animation: ripple 600ms linear;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}

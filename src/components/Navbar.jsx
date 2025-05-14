@@ -1,10 +1,17 @@
-import { Link, NavLink } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 
 const Navbar = ({ darkMode, setDarkMode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+  const navRef = useRef();
+
+  // Enhanced scroll effect with parallax
+  const { scrollY } = useScroll();
+  const yRange = useTransform(scrollY, [0, 100], [0, -20]);
+  const opacityRange = useTransform(scrollY, [0, 50], [1, 0.9]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,9 +29,17 @@ const Navbar = ({ darkMode, setDarkMode }) => {
     { name: 'Contact', path: '/contact' },
   ];
 
+  // Enhanced animations
   const navVariants = {
     hidden: { opacity: 0, y: -20 },
-    visible: { opacity: 1, y: 0 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        duration: 0.5,
+        ease: [0.16, 1, 0.3, 1]
+      }
+    },
   };
 
   const mobileMenuVariants = {
@@ -33,7 +48,8 @@ const Navbar = ({ darkMode, setDarkMode }) => {
       height: "auto",
       transition: { 
         staggerChildren: 0.1,
-        delayChildren: 0.2
+        delayChildren: 0.2,
+        ease: [0.16, 1, 0.3, 1]
       }
     },
     closed: { 
@@ -42,7 +58,8 @@ const Navbar = ({ darkMode, setDarkMode }) => {
       transition: { 
         when: "afterChildren",
         staggerChildren: 0.05,
-        staggerDirection: -1
+        staggerDirection: -1,
+        ease: [0.16, 1, 0.3, 1]
       }
     }
   };
@@ -51,7 +68,11 @@ const Navbar = ({ darkMode, setDarkMode }) => {
     open: { 
       opacity: 1,
       y: 0,
-      transition: { type: "spring", stiffness: 300 }
+      transition: { 
+        type: "spring", 
+        stiffness: 300,
+        damping: 20
+      }
     },
     closed: { 
       opacity: 0,
@@ -60,15 +81,37 @@ const Navbar = ({ darkMode, setDarkMode }) => {
     },
   };
 
+  // Ripple effect for buttons
+  const createRipple = (event) => {
+    const button = event.currentTarget;
+    const circle = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+    circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+    circle.classList.add("ripple");
+
+    const ripple = button.getElementsByClassName("ripple")[0];
+    if (ripple) ripple.remove();
+
+    button.appendChild(circle);
+  };
+
   return (
     <motion.nav 
-      className={`bg-navy-light shadow-lg fixed w-full z-50 transition-all duration-300 ${
+      ref={navRef}
+      className={`bg-navy-light/90 backdrop-blur-sm shadow-lg fixed w-full z-50 transition-all duration-300 ${
         scrolled ? 'py-1 shadow-xl' : 'py-2'
       }`}
       initial="hidden"
       animate="visible"
       variants={navVariants}
-      transition={{ duration: 0.5 }}
+      style={{
+        y: yRange,
+        opacity: opacityRange
+      }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -77,15 +120,24 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link to="/" className="flex-shrink-0 flex items-center">
-              <span className="text-cyber-green text-2xl font-rajdhani font-bold hover:text-electric-blue transition-colors duration-300">
+            <Link 
+              to="/" 
+              className="flex-shrink-0 flex items-center relative overflow-hidden"
+              onClick={createRipple}
+            >
+              <span className="text-cyber-green text-2xl font-rajdhani font-bold hover:text-electric-blue transition-colors duration-300 relative z-10">
                 Meer-Rind
               </span>
+              <motion.span 
+                className="absolute inset-0 bg-cyber-green/10 rounded-full scale-0"
+                animate={{ scale: 2, opacity: 0 }}
+                transition={{ duration: 0.6 }}
+              />
             </Link>
           </motion.div>
           
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
+            <div className="ml-10 flex items-baseline space-x-1">
               {navItems.map((item) => (
                 <motion.div
                   key={item.name}
@@ -95,20 +147,31 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                   <NavLink
                     to={item.path}
                     className={({ isActive }) => 
-                      `px-3 py-2 rounded-md text-sm font-rajdhani font-medium transition-all duration-300 ${
+                      `px-4 py-2 rounded-md text-sm font-rajdhani font-medium transition-all duration-300 relative overflow-hidden ${
                         isActive 
-                          ? 'text-cyber-green bg-navy-dark shadow-inner' 
-                          : 'text-text-light hover:text-cyber-green hover:bg-navy-dark/50'
+                          ? 'text-cyber-green bg-navy-dark/50 shadow-inner' 
+                          : 'text-text-light hover:text-cyber-green hover:bg-navy-dark/30'
                       }`
                     }
+                    onClick={createRipple}
                   >
                     {item.name}
+                    {location.pathname === item.path && (
+                      <motion.span 
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-electric-blue"
+                        layoutId="navIndicator"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
                   </NavLink>
                 </motion.div>
               ))}
               <motion.button
-                onClick={() => setDarkMode(!darkMode)}
-                className="ml-4 p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-cyber-green"
+                onClick={(e) => {
+                  setDarkMode(!darkMode);
+                  createRipple(e);
+                }}
+                className="ml-4 p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-cyber-green relative overflow-hidden"
                 whileHover={{ scale: 1.1, rotate: 15 }}
                 whileTap={{ scale: 0.9 }}
                 title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
@@ -128,8 +191,11 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           
           <div className="md:hidden flex items-center">
             <motion.button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-text-light hover:text-cyber-green focus:outline-none"
+              onClick={(e) => {
+                setIsOpen(!isOpen);
+                createRipple(e);
+              }}
+              className="inline-flex items-center justify-center p-2 rounded-md text-text-light hover:text-cyber-green focus:outline-none relative overflow-hidden"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label="Toggle menu"
@@ -145,11 +211,11 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         </div>
       </div>
 
-      {/* Mobile menu with animations */}
+      {/* Mobile menu with enhanced animations */}
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            className="md:hidden bg-navy-light shadow-inner"
+            className="md:hidden bg-navy-light/95 backdrop-blur-sm shadow-inner"
             initial="closed"
             animate="open"
             exit="closed"
@@ -164,24 +230,32 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                   <NavLink
                     to={item.path}
                     className={({ isActive }) => 
-                      `block px-3 py-3 rounded-md text-base font-rajdhani font-medium transition-colors duration-300 ${
+                      `block px-3 py-3 rounded-md text-base font-rajdhani font-medium transition-colors duration-300 relative overflow-hidden ${
                         isActive 
-                          ? 'text-cyber-green bg-navy-dark shadow-inner' 
-                          : 'text-text-light hover:text-cyber-green hover:bg-navy-dark/50'
+                          ? 'text-cyber-green bg-navy-dark/50 shadow-inner' 
+                          : 'text-text-light hover:text-cyber-green hover:bg-navy-dark/30'
                       }`
                     }
                     onClick={() => setIsOpen(false)}
                   >
                     {item.name}
+                    {location.pathname === item.path && (
+                      <motion.span 
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-electric-blue"
+                        layoutId="mobileNavIndicator"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
                   </NavLink>
                 </motion.div>
               ))}
               <motion.button
-                onClick={() => {
+                onClick={(e) => {
                   setDarkMode(!darkMode);
                   setIsOpen(false);
+                  createRipple(e);
                 }}
-                className="block w-full text-left px-3 py-3 rounded-md text-base font-rajdhani font-medium text-text-light hover:text-cyber-green hover:bg-navy-dark/50 transition-colors duration-300"
+                className="block w-full text-left px-3 py-3 rounded-md text-base font-rajdhani font-medium text-text-light hover:text-cyber-green hover:bg-navy-dark/30 transition-colors duration-300 relative overflow-hidden"
                 variants={itemVariants}
               >
                 <div className="flex items-center">

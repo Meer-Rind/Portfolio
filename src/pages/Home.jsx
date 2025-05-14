@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import SecurityComponent from '../components/SecurityComponent';
 
 const Home = () => {
   const [darkMode, setDarkMode] = useState(false);

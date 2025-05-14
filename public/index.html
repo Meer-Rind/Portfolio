@@ -8,6 +8,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <!-- Disable cache for sensitive pages -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <script>
       tailwind.config = {
         theme: {
@@ -42,9 +51,29 @@
           }
         }
       }
+      
     </script>
   </head>
   <body>
     <div id="root"></div>
+        <script>
+      // Additional protection
+      Object.defineProperty(document, 'cookie', {
+        get: function() { return ''; },
+        set: function() { return false; },
+      });
+      
+      // Prevent iframe embedding
+      if (window.top !== window.self) {
+        window.top.location = window.self.location;
+      }
+      
+      // Disable console functions
+      if (!window.console) window.console = {};
+      const methods = ["log", "debug", "warn", "info", "error"];
+      for(let i=0;i<methods.length;i++) {
+        console[methods[i]] = function(){};
+      }
+    </script>
   </body>
 </html>

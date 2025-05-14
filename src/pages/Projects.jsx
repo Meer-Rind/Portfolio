@@ -3,6 +3,7 @@ import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import ProjectCard from '../components/ProjectCard';
 import { useInView } from 'react-intersection-observer';
 import { FiGithub, FiExternalLink, FiCode, FiLock, FiServer, FiCpu, FiChevronRight } from 'react-icons/fi';
+import SecurityComponent from '../components/SecurityComponent';
 
 const Projects = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);

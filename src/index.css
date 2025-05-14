@@ -138,3 +138,31 @@ h1, h2, h3, h4, h5, h6 {
   white-space: nowrap;
   animation: hacker-text 4s steps(30) 1 forwards;
 }
+/* Add to your global styles */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(59, 130, 246, 0.3);
+  transform: scale(0);
+  animation: ripple 600ms linear;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
